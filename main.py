@@ -1,11 +1,10 @@
 import sys
 import time
 import logging
-import numpy as np
 from config import config
 from utils import IOHelper
 from benchmark import benchmark
-from tables_utils import print_table
+from utils.tables_utils import print_table
 
 class Tee(object):
     def __init__(self, *files):
@@ -34,9 +33,9 @@ def main():
 
     trainX, trainY = IOHelper.get_npz_data(config['data_dir'], verbose=True)
 
-    #benchmark(trainX, trainY)
-    directory = 'results/standardML'
-    print_table(directory, preprocessing='max')
+    benchmark(trainX, trainY)
+    #directory = 'results/standardML'
+    #print_table(directory, preprocessing='max')
 
     logging.info("--- Runtime: %s seconds ---" % (time.time() - start_time))
     logging.info('Finished Logging')

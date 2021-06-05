@@ -2,7 +2,6 @@
 # let's keep it here to have a clean code on other methods that we try
 import time
 import os
-from hyperparameters import our_models
 config = dict()
 
 ##################################################################
@@ -16,6 +15,11 @@ config['log_dir'] = './runs/'
 config['data_dir'] = '../data/'
 # Path of root
 config['root_dir'] = '.'
+config['framework'] = 'pytorch'
+config['learning_rate'] = 1e-4
+config['early_stopping'] = True
+config['patience'] = 10
+config['save_models'] = True
 
 ##################################################################
 # You can modify the rest or add new fields as you need.
@@ -56,43 +60,15 @@ config['model'] = ''
 config['task'] = 'LR_task'
 config['dataset'] = 'antisaccade'
 config['preprocessing'] = 'max'  # or min
+config['feature_extraction'] = True
 
 # format for .npz data
-config['feature_extraction'] = True
 config['preprocessing_path'] = 'synchronised_' + config['preprocessing']
 config['all_EEG_file'] = config['task'] + '_with_' + config['dataset']
 config['all_EEG_file'] = config['all_EEG_file'] + '_' + config['preprocessing_path']
 config['all_EEG_file'] = config['all_EEG_file'] + ('_hilbert.npz' if config['feature_extraction'] else '.npz')
 config['trainX_variable'] = 'EEG'
 config['trainY_variable'] = 'labels'
-
-# Use the following formats to add your own models (see hyperparameters.py for examples)
-# 'NAME' : [MODEL, {'param1' : value1, 'param2' : value2, ...}]
-# the model should be callable with MODEL(param1=value1, param2=value2, ...)
-your_models = {
-    'LR_task' : {
-
-    },
-    'Direction_task' : {
-        'amplitude' : {
-
-        },
-        'angle' : {
-
-        }
-    },
-    'Position_task' : {
-        'x' : {
-
-        },
-        'y' : {
-        
-        }
-    }
-}
-
-config['models'] = our_models[config['task']][config['dataset']][config['preprocessing']]
-#config['models'] = your_models[config['task']]
 
 # OLD CROSS VALIDATION IMPLMENTATION
 # MAKE SURE TO HAVE PARAMETRS COHERENT WITH DATASET
@@ -129,17 +105,21 @@ config['xception']['input_shape'] = (500, 129)
 config['eegnet']['channels'] = 129
 config['eegnet']['samples'] = 500
 
-# Create a unique output directory for this experiment.
-timestamp = str(int(time.time()))
-model_folder_name = timestamp if config['model'] == '' else timestamp + "_" + config['model']
 
+timestamp = str(int(time.time()))
+model_folder_name = None
+model_folder_name = 'timestamp' if config['model'] == '' else timestamp + "_" + config['model']
 
 #if config['ensemble']>1:
 #    model_folder_name += '_ensemble'
 
 config['model_dir'] = os.path.abspath(os.path.join(config['log_dir'], model_folder_name))
+config['checkpoint_dir'] = config['model_dir'] + '/checkpoint/'
 if not os.path.exists(config['model_dir']):
     os.makedirs(config['model_dir'])
+
+if not os.path.exists(config['checkpoint_dir']):
+    os.makedirs(config['checkpoint_dir'])
 
 config['info_log'] = config['model_dir'] + '/' + 'info.log'
 config['batches_log'] = config['model_dir'] + '/' + 'batches.log'

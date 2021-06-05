@@ -3,14 +3,17 @@ import logging
 import time
 import math
 from sklearn.metrics import mean_squared_error
+from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 from config import config
+from hyperparameters import allmodels
+import pickle
 
 # return boolean arrays with length corresponding to n_samples
 # the split is done based on the number of IDs
-def split(trainY, train, val, test):
+def split(ids, train, val, test):
     assert (train+val+test == 1)
-    IDs = np.unique(trainY[:,0])
+    IDs = np.unique(ids)
     num_ids = len(IDs)
 
     # priority given to the test/val sets
@@ -18,24 +21,29 @@ def split(trainY, train, val, test):
     val_split = math.ceil(val * num_ids)
     train_split = num_ids - val_split - test_split
 
-    train = np.isin(trainY[:,0], IDs[:train_split])
-    val = np.isin(trainY[:,0], IDs[train_split:train_split+val_split])
-    test = np.isin(trainY[:,0], IDs[train_split+val_split:])
+    train = np.isin(ids, IDs[:train_split])
+    val = np.isin(ids, IDs[train_split:train_split+val_split])
+    test = np.isin(ids, IDs[train_split+val_split:])
 
     return train, val, test
 
 
-def try_models(X, y, train, models, N=5, scoring=None, scale=False, save_trail=''):
+def try_models(trainX, trainY, ids, models, N=5, scoring=None, scale=False, save_trail='', save=False):
+
     logging.info("Training the models")
-    
+    train, val, test = split(ids, 0.7, 0.15, 0.15)
+    X_train, y_train = trainX[train], trainY[train]
+    X_val, y_val = trainX[val], trainY[val]
+    X_test, y_test = trainX[test], trainY[test]
+
+
     if scale:
         logging.info('Standard Scaling')
         scaler = StandardScaler()
-        scaler.fit(X[train])
-        X = scaler.transform(X)
-
-    X_train, y_train = X[train], y[train]
-    X_test, y_test = X[~train], y[~train]
+        scaler.fit(X_train)
+        X_train = scaler.transform(X_train)
+        X_val = scaler.transform(X_val)
+        X_test = scaler.transform(X_test)
 
     all_runs = []
     statistics = []
@@ -47,16 +55,27 @@ def try_models(X, y, train, models, N=5, scoring=None, scale=False, save_trail='
 
         for i in range(N):
             # create the model with the corresponding parameters
-            classifier = model[0](**model[1])
+            trainer = model[0](**model[1])
+            logging.info(trainer)
 
             start_time = time.time()
-            classifier.fit(X_train, y_train.ravel())
-            if scoring is None:
-                score = classifier.score(X_test, y_test.ravel())
-            else:
-                score = scoring(y_test.ravel(), classifier.predict(X_test))
-            runtime = (time.time() - start_time)
+            #trainer.fit(X_train, y_train, X_val, y_val)
 
+            if save:
+                # save the model to disk
+                filename = config['checkpoint_dir'] + name + 'run' + str(i) + '.sav'
+                pickle.dump(trainer, open(filename, 'wb'))
+
+            print(y_test.ravel().shape)
+            print(trainer.predict(X_test).shape)
+            score = scoring(y_test.ravel(), trainer.predict(X_test))
+            # Test
+            # load the model from disk
+            # loaded_model = pickle.load(open(filename, 'rb'))
+            # print(loaded_model)
+            # score = scoring(y_test.ravel(), loaded_model.predict(X_test))
+            # print(score)
+            runtime = (time.time() - start_time)
             all_runs.append([name, score, runtime])
             model_runs.append([score, runtime])
 
@@ -72,42 +91,34 @@ def try_models(X, y, train, models, N=5, scoring=None, scale=False, save_trail='
 
 def benchmark(trainX, trainY):
     np.savetxt(config['model_dir']+'/config.csv', [config['task'], config['dataset'], config['preprocessing']], fmt='%s')
+    models = allmodels[config['task']][config['dataset']][config['preprocessing']]
 
-    train, val, test = split(trainY, 0.7, 0.15, 0.15)
-    models = config['models']
-
-    # TODO: Because the datasets are (nb_samples, 1, 258) and it changes it to (nb_samples, 258) -> NEEDS TO BE ADAPTED
-    trainX = trainX.reshape((-1, 258))
-
-    X = trainX[train | test]
-    t = train[train | test] # TODO Not so understandable, but works :) -> t has indexes of train data to true and false to test (validation is removed).
+    ids = trainY[:, 0]
 
     if config['task'] == 'LR_task':
         if config['dataset'] == 'antisaccade':
-            y = trainY[:,1][train | test] # The first column are the Id-s, we take the second which are labels
-            try_models(X, y, t, models)
+            scoring = (lambda y, y_pred: accuracy_score(y, y_pred))  # Subject to change to mean euclidean distance.
+            y = trainY[:,1] # The first column are the Id-s, we take the second which are labels
+            try_models(trainX=trainX, trainY=y, ids=ids, models=models, scoring=scoring)
         else:
             raise ValueError("This task cannot be predicted (is not implemented yet) with the given dataset.")
 
     elif config['task'] == 'Direction_task':
         if config['dataset'] == 'dots':
             scoring = (lambda y, y_pred : np.sqrt(mean_squared_error(y, y_pred)))
-            y = trainY[:,1][train | test] # The first column are the Id-s, we take the second which are amplitude labels
-            try_models(X, y, t, models['amplitude'], scoring=scoring, save_trail='_amplitude')
-            y = trainY[:,2][train | test] # The first column are the Id-s, secon are the amplitude labels, we take the third which are the angle labels
-            try_models(X, y, t, models['angle'], scoring=scoring, save_trail='_angle')
+            y1 = trainY[:,1] # The first column are the Id-s, we take the second which are amplitude labels
+            try_models(trainX=trainX, trainY=y1, ids=ids, models=models['amplitude'], scoring=scoring, save_trail='_amplitude')
+            y2 = trainY[:,2] # The first column are the Id-s, second are the amplitude labels, we take the third which are the angle labels
+            try_models(trainX=trainX, trainY=y2, ids=ids, models=models['angle'], scoring=scoring, save_trail='_angle')
         else:
             raise ValueError("This task cannot be predicted (is not implemented yet) with the given dataset.")
 
     elif config['task'] == 'Position_task':
         if config['dataset'] == 'dots':
-            scoring = (lambda y, y_pred : np.sqrt(mean_squared_error(y, y_pred)))
-            y = trainY[:,1][train | test]
-            try_models(X, y, t, models['x'], scoring=scoring, save_trail='_x')
-            y = trainY[:,2][train | test]
-            try_models(X, y, t, models['y'], scoring=scoring, save_trail='_y')
+            scoring = (lambda y, y_pred : np.sqrt(mean_squared_error(y, y_pred))) # Subject to change to mean euclidean distance.
+            y = trainY[:,1:] # The first column are the Id-s, the second and third are position x and y which we use
+            try_models(trainX=trainX, trainY=y, ids=ids, models=models, scoring=scoring)
         else:
             raise ValueError("This task cannot be predicted (is not implemented yet) with the given dataset.")
-
     else:
         raise NotImplementedError(f"Task {config['task']} is not implemented yet.")
