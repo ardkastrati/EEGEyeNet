@@ -1,0 +1,42 @@
+INFO:root:Started the Logging
+INFO:root:Loading LR_task_with_antisaccade_synchronised_max_hilbert.npz
+INFO:root:X training loaded.
+INFO:root:(30825, 1, 258)
+INFO:root:y training loaded.
+INFO:root:(30825, 2)
+INFO:root:Training the models
+INFO:root:Training of KNN
+INFO:root:--- Score: 0.6087588210875882 
+INFO:root:--- Runtime: 33.016993045806885 for seconds ---
+INFO:root:--- Score: 0.6087588210875882 
+INFO:root:--- Runtime: 38.46666383743286 for seconds ---
+INFO:root:--- Score: 0.6087588210875882 
+INFO:root:--- Runtime: 44.529377698898315 for seconds ---
+INFO:root:--- Score: 0.6087588210875882 
+INFO:root:--- Runtime: 48.45177102088928 for seconds ---
+INFO:root:--- Score: 0.6087588210875882 
+INFO:root:--- Runtime: 43.763123989105225 for seconds ---
+INFO:root:Training of GaussianNB
+INFO:root:--- Score: 0.5850975508509755 
+INFO:root:--- Runtime: 0.19185519218444824 for seconds ---
+INFO:root:--- Score: 0.5850975508509755 
+INFO:root:--- Runtime: 0.11716103553771973 for seconds ---
+INFO:root:--- Score: 0.5850975508509755 
+INFO:root:--- Runtime: 0.11361575126647949 for seconds ---
+INFO:root:--- Score: 0.5850975508509755 
+INFO:root:--- Runtime: 0.11018800735473633 for seconds ---
+INFO:root:--- Score: 0.5850975508509755 
+INFO:root:--- Runtime: 0.11349296569824219 for seconds ---
+INFO:root:Training of LinearSVC
+INFO:root:--- Score: 0.6309672063096721 
+INFO:root:--- Runtime: 27.932466983795166 for seconds ---
+INFO:root:--- Score: 0.632420091324201 
+INFO:root:--- Runtime: 29.041018962860107 for seconds ---
+INFO:root:--- Score: 0.6320049813200498 
+INFO:root:--- Runtime: 28.9099440574646 for seconds ---
+INFO:root:--- Score: 0.632420091324201 
+INFO:root:--- Runtime: 28.87342596054077 for seconds ---
+INFO:root:--- Score: 0.6313823163138231 
+INFO:root:--- Runtime: 28.72827124595642 for seconds ---
+INFO:root:--- Runtime: 352.54785108566284 seconds ---
+INFO:root:Finished Logging
