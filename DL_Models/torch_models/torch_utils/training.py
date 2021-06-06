@@ -20,7 +20,10 @@ def train_loop(dataloader, model, loss_name, loss_fn, optimizer):
             y = y.cuda()
         # Compute prediction and loss
         pred = model(X)
-        loss = loss_fn(pred, y.view(-1,1))
+
+        if len(y.size()) == 1:
+            y = y.view(-1, 1)
+        loss = loss_fn(pred, y)
         # Backpropagation and optimization 
         optimizer.zero_grad()
         loss.backward()
@@ -61,8 +64,12 @@ def validation_loop(dataloader, model, loss_name, loss_fn):
                 y = y.cuda()
             # Predict 
             pred = model(X)
+
+            if len(y.size()) == 1:
+                y = y.view(-1, 1)
+
             # Compute metrics
-            val_loss += loss_fn(pred, y.view(-1, 1)).item()
+            val_loss += loss_fn(pred, y).item()
             if loss_name == 'bce':
                 pred = (pred > 0.5).float()
                 correct += (pred == y).float().sum() 
@@ -91,7 +98,6 @@ def test_loop(dataloader, model):
 
     val_loss, correct = 0, 0
     with torch.no_grad():
-        all_pred = np.array([])
         for batch, (X, _) in enumerate(dataloader):
             # Move tensors to GPU
             if torch.cuda.is_available():
@@ -100,8 +106,11 @@ def test_loop(dataloader, model):
             pred = model(X)
             #print(pred.shape)
             #print(pred.detach().numpy().ravel().shape)
-            all_pred = np.concatenate([all_pred, pred.cpu().data.numpy().ravel()])
+            if batch == 0:
+                all_pred = pred.cpu()
+            else:
+                all_pred = torch.cat((all_pred, pred.cpu()))
             del X
             torch.cuda.empty_cache()
-    return np.array(all_pred)  # Can be used for early stopping
+    return all_pred.data.numpy()
     

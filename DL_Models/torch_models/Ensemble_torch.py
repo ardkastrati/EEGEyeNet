@@ -83,13 +83,6 @@ class Ensemble_torch:
             else:
                 pred = test_loop(dataloader=test_dataloader, model=model)
         pred = pred[:-a]
-        print(f"prediction without division")
-        print(pred)
-        print("prediction after division")
-        print(pred/len(self.models))
-        print(f"nb models: {self.nb_models}")
-        print(f"self.models len {len(self.models)}")
-
         return pred / len(self.models) # TODO: this might have to be rounded for majority decision in LR task
 
     def save(self, path):

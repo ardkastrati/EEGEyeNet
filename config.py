@@ -15,7 +15,7 @@ config = dict()
 config['task'] = 'Position_task'
 config['dataset'] = 'dots'
 config['preprocessing'] = 'max'  # or min
-config['feature_extraction'] = False 
+config['feature_extraction'] = False
 
 ##################################################################
 ##################################################################
@@ -25,12 +25,12 @@ config['feature_extraction'] = False
 # Where experiment results are stored.
 config['log_dir'] = './runs/'
 # Path to training, validation and test data folders.
-config['data_dir'] = './data/'
+config['data_dir'] = '../data/'
 # Path of root
 config['root_dir'] = '.'
 # Retrain or load already trained
-config['retrain'] = True
-config['save_models'] = True
+config['retrain'] = False
+config['save_models'] = False
 # If retrain is false we need to provide where to load the experiment files
 config['load_experiment_dir'] = 'Amplitude_max/'
 # all_EEG_file should specify the name of the file where the prepared data is located (if emp
@@ -83,6 +83,3 @@ def create_folder():
         stamp = str(int(time.time()))
         config['info_log'] = config['model_dir'] + '/' + 'inference_info_' + stamp + '.log'
         config['batches_log'] = config['model_dir'] + '/' + 'inference_batches_' + stamp + '.log'
-
-
-

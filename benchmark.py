@@ -73,8 +73,8 @@ def try_models(trainX, trainY, ids, models, N=5, scoring=None, scale=False, save
             if config['save_models']:
                 trainer.save(path)
 
-            #print(y_test.ravel().shape)
-            #print(trainer.predict(X_test).shape)
+            print(y_test.shape)
+            print(trainer.predict(X_test).shape)
             score = scoring(y_test, trainer.predict(X_test))
 
 
