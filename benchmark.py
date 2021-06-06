@@ -7,7 +7,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 from config import config
 from hyperparameters import allmodels
-import pickle
+import os
+
 
 # return boolean arrays with length corresponding to n_samples
 # the split is done based on the number of IDs
@@ -57,24 +58,25 @@ def try_models(trainX, trainY, ids, models, N=5, scoring=None, scale=False, save
             # create the model with the corresponding parameters
             trainer = model[0](**model[1])
             logging.info(trainer)
-
             start_time = time.time()
-            #trainer.fit(X_train, y_train, X_val, y_val)
 
-            if save:
-                # save the model to disk
-                filename = config['checkpoint_dir'] + name + 'run' + str(i) + '.sav'
-                pickle.dump(trainer, open(filename, 'wb'))
+            # Taking care of saving and loading
+            path = config['checkpoint_dir'] + 'run' + str(i + 1) + '/'
+            if not os.path.exists(path):
+                os.makedirs(path)
+
+            if config['retrain']:
+                trainer.fit(X_train, y_train, X_val, y_val)
+            else:
+                trainer.load(path)
+
+            if config['save_models']:
+                trainer.save(path)
 
             print(y_test.ravel().shape)
             print(trainer.predict(X_test).shape)
             score = scoring(y_test.ravel(), trainer.predict(X_test))
-            # Test
-            # load the model from disk
-            # loaded_model = pickle.load(open(filename, 'rb'))
-            # print(loaded_model)
-            # score = scoring(y_test.ravel(), loaded_model.predict(X_test))
-            # print(score)
+
             runtime = (time.time() - start_time)
             all_runs.append([name, score, runtime])
             model_runs.append([score, runtime])
@@ -116,8 +118,9 @@ def benchmark(trainX, trainY):
     elif config['task'] == 'Position_task':
         if config['dataset'] == 'dots':
             scoring = (lambda y, y_pred : np.sqrt(mean_squared_error(y, y_pred))) # Subject to change to mean euclidean distance.
+            scoring2 = (lambda y, y_pred: np.linalg.norm(y - y_pred, axis=1).mean()) # Euclidean distance
             y = trainY[:,1:] # The first column are the Id-s, the second and third are position x and y which we use
-            try_models(trainX=trainX, trainY=y, ids=ids, models=models, scoring=scoring)
+            try_models(trainX=trainX, trainY=y, ids=ids, models=models, scoring=scoring2)
         else:
             raise ValueError("This task cannot be predicted (is not implemented yet) with the given dataset.")
     else:

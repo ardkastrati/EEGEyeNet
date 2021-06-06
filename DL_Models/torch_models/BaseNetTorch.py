@@ -151,20 +151,8 @@ class BaseNet(nn.Module):
                 else:
                     best_val_loss = val_loss_epoch
                     logging.info(f"Improved validation loss to: {best_val_loss}")
-                    patience = 0 
+                    patience = 0
                     
-        # Plot and save metrics
-        #plot_metrics(metrics['train_loss'], metrics['val_loss'], output_dir=config['model_dir'], metric='loss', model_number=self.model_number)
-        #if config['task'] == 'prosaccade-clf':
-        #    plot_metrics(metrics['train_acc'], metrics['val_acc'], output_dir=config['model_dir'], metric='accuracy', model_number=self.model_number)
-        # Save metrics
-        #pd.DataFrame.from_dict(metrics).to_csv(path_or_buf=config['model_dir'] + '/metrics/' + 'metrics_model_nb_' + str(self.model_number) + '.csv')
-        # Save model 
-        if config['save_models']:
-            ckpt_dir = config['checkpoint_dir'] + config['model'] + '_nb_{}_'.format(self.model_number) + 'best_model.pth'
-            torch.save(self.state_dict(), ckpt_dir)
-        #return prediction_ensemble 
-
     def predict(self, X):
         tensor_X = torch.tensor(X).float()
         if torch.cuda.is_available():

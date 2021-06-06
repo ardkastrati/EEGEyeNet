@@ -59,3 +59,20 @@ class StandardRegressor_2D:
         predict1 = self.model1.predict(testX)
         predict2 = self.model2.predict(testX)
         return [predict1, predict2]
+
+    def save(self, path):
+        # save the model to disk
+        import pickle
+        filename1 = path + self.model_name + '_X.sav'
+        pickle.dump(self.model1, open(filename1, 'wb'))
+        filename2 = path + self.model_name + '_Y.sav'
+        pickle.dump(self.model2, open(filename2, 'wb'))
+
+    def load(self, path):
+        # Test
+        # load the model from disk
+        import pickle
+        filename1 = path + self.model_name + '_X.sav'
+        self.model1 = pickle.load(open(filename1, 'rb'))
+        filename2 = path + self.model_name + '_Y.sav'
+        self.model2 = pickle.load(open(filename2, 'rb'))

@@ -162,7 +162,7 @@ our_ML_models = {
     }
 }
 
-nb_models = 5
+nb_models = 2
 batch_size = 64
 input_shape = (1, 258)
 depth = 12

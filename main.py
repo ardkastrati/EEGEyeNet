@@ -1,7 +1,7 @@
 import sys
 import time
 import logging
-from config import config
+from config import config, create_folder
 from utils import IOHelper
 from benchmark import benchmark
 from utils.tables_utils import print_table
@@ -22,6 +22,7 @@ Main entry of the program
 """
 def main():
     # Setting up logging
+    create_folder()
     logging.basicConfig(filename=config['info_log'], level=logging.INFO)
     logging.info('Started the Logging')
     start_time = time.time()
@@ -32,7 +33,6 @@ def main():
     sys.stdout = Tee(sys.stdout, f)
 
     trainX, trainY = IOHelper.get_npz_data(config['data_dir'], verbose=True)
-
     benchmark(trainX, trainY)
     #directory = 'results/standardML'
     #print_table(directory, preprocessing='max')

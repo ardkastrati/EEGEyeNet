@@ -13,6 +13,7 @@ class Ensemble_torch:
     """
     The Ensemble is a model itself, which contains a number of models whose prediction is averaged (majority decision in case of a classifier). 
     """
+
     def __init__(self, model_name='CNN', nb_models=5, loss='bce', batch_size=64, **model_params):
         """
         model_name: the model that the ensemble uses
@@ -26,7 +27,8 @@ class Ensemble_torch:
         self.batch_size = batch_size
         self.loss = loss
         self.model_instance = None
-        self.load_file_pattern = re.compile('_nb_._best_model.pth')
+        self.load_file_pattern = re.compile(self.model_name + '_nb_._best_model.pth')
+        self.models = []
 
         if self.model_name == 'CNN':
             from DL_Models.torch_models.CNN.CNN import CNN
@@ -52,15 +54,17 @@ class Ensemble_torch:
         # Create dataloaders
         trainX = np.transpose(trainX, (0, 2, 1))  # (batch_size, samples, channels) to (bs, ch, samples) as torch conv layers want it
         validX = np.transpose(validX, (0, 2, 1))  # (batch_size, samples, channels) to (bs, ch, samples) as torch conv layers want it
-        train_dataloader = create_dataloader(trainX, trainY, self.batch_size, 'train')
-        validation_dataloader = create_dataloader(validX, validY, self.batch_size, 'val')
+        train_dataloader = create_dataloader(trainX, trainY, self.batch_size)
+        validation_dataloader = create_dataloader(validX, validY, self.batch_size)
         # Fit the models 
         for i in range(self.nb_models):
             logging.info("------------------------------------------------------------------------------------")
             logging.info('Start fitting model number {}/{} ...'.format(i+1, self.nb_models))
             model = self.model(loss = self.loss, model_number=i, batch_size=self.batch_size, **self.model_params)
             model.fit(train_dataloader, validation_dataloader)
+            self.models.append(model)
             logging.info('Finished fitting model number {}/{} ...'.format(i+1, self.nb_models))
+
 
     def predict(self, testX):
         testX = np.transpose(testX, (0, 2, 1))  # (batch_size, samples, channels) to (bs, ch, samples) as torch conv layers want it
@@ -70,22 +74,30 @@ class Ensemble_torch:
         print(dummy.shape)
         testX = np.concatenate((testX, dummy)) # TO ADD batch_size - testX.shape[0]%batch_size
         test_dataloader = create_dataloader(testX, testX, self.batch_size, drop_last=False)
-
-        path = config['checkpoint_dir']
-        print(os.listdir(path))
         pred = None
+        for model in self.models:
+           if pred is not None:
+                pred += test_loop(dataloader=test_dataloader, model=model)
+           else:
+                pred = test_loop(dataloader=test_dataloader, model=model)
+        pred = pred[:-a]
+        return pred / self.nb_models # TODO: this might have to be rounded for majority decision in LR task
+
+
+    def save(self, path):
+        for i, model in enumerate(self.models):
+            ckpt_dir = path + self.model_name + '_nb_{}_'.format(i) + 'best_model.pth'
+            torch.save(model.state_dict, ckpt_dir)
+
+    def load(self, path):
         for file in os.listdir(path):
             if not self.load_file_pattern.match(file):
                 continue
-
-            # These 3 lines are needed for torch to load and predict
+            # These 3 lines are needed for torch to load
             logging.info(f"Loading model nb from file {file} and predict with it")
-            model = self.model(loss = self.loss, model_number=0, batch_size=self.batch_size, **self.model_params) # model = TheModelClass(*args, **kwargs)
-            model.load_state_dict(torch.load(path + file)) # model.load_state_dict(torch.load(PATH))
-            model.eval() # needed before prediction
-            if pred is None:
-                pred = test_loop(dataloader=test_dataloader, model=model)
-            else:
-                pred += test_loop(dataloader=test_dataloader, model=model)
-        pred = pred[:-a]
-        return pred / self.nb_models # TODO: this might have to be rounded for majority decision in LR task
+            model = self.model(loss=self.loss, model_number=0, batch_size=self.batch_size,
+                               **self.model_params)  # model = TheModelClass(*args, **kwargs)
+            print(path + file)
+            model.load_state_dict(torch.load(path + file))  # model.load_state_dict(torch.load(PATH))
+            model.eval()  # needed before prediction
+            self.models.append(model)

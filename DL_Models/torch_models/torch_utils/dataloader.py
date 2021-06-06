@@ -13,9 +13,9 @@ def create_dataloader(X, y, batch_size, drop_last=True):
     tensor_x = torch.as_tensor(X).float() 
     tensor_y = torch.as_tensor(y).float()
     # Unsqueeze channel direction for eegNet model
-    if config['model'] == 'eegnet' or config['model'] == 'gazenet':
-        logging.info(f"Unsqueeze data for eegnet")
-        tensor_x = tensor_x.unsqueeze(1)
+    #if config['model'] == 'eegnet' or config['model'] == 'gazenet':
+    #    logging.info(f"Unsqueeze data for eegnet")
+    #    tensor_x = tensor_x.unsqueeze(1)
     # Log the shapes
     #logging.info(f"Tensor x {mode} size: {tensor_x.size()}")
     #logging.info(f"Tensor y {mode} size: {tensor_y.size()}")

@@ -29,3 +29,9 @@ class Ensemble:
             return np.round(self.ensemble.predict(testX)) #TODO: Hack
         else:
             return self.ensemble.predict(testX)
+
+    def save(self, path):
+        self.ensemble.save(path)
+
+    def load(self, path):
+        self.ensemble.load(path)
