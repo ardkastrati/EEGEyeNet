@@ -5,20 +5,10 @@ import os
 config = dict()
 
 ##################################################################
-# Please note that the following fields will be set by our scripts to re-train and re-evaluate the models.
-# Where experiment results are stored.
-config['log_dir'] = './runs/'
-# Path to training, validation and test data folders.
-config['data_dir'] = '../data/'
-# Path of root
-config['root_dir'] = '.'
-# Retrain or load already trained
-config['retrain'] = True
-config['save_models'] = True
-
-# If retrain is false we need to provide where to load the experiment files
-config['load_experiment_dir'] = '1622975819/'
-
+##################################################################
+############### BENCHMARK CONFIGURATIONS #########################
+##################################################################
+##################################################################
 # 'LR_task' (dataset: 'antisaccade'):
 # 'Direction_task' (dataset: 'dots' or 'processing_speed'):
 # 'Position_task' (dataset: 'dots'):
@@ -27,21 +17,52 @@ config['dataset'] = 'antisaccade'
 config['preprocessing'] = 'max'  # or min
 config['feature_extraction'] = True
 
-# Specific to models now  ...... (needs to be fixed)
+
+##################################################################
+##################################################################
+############### PATH CONFIGURATIONS ##############################
+##################################################################
+##################################################################
+# Where experiment results are stored.
+config['log_dir'] = './runs/'
+# Path to training, validation and test data folders.
+config['data_dir'] = '../data/'
+# Path of root
+config['root_dir'] = '.'
+# Retrain or load already trained
+config['retrain'] = False
+config['save_models'] = False
+# If retrain is false we need to provide where to load the experiment files
+config['load_experiment_dir'] = '1622985551/'
+# all_EEG_file should specify the name of the file where the prepared data is located (if emp
+def build_file_name():
+    all_EEG_file = config['task'] + '_with_' + config['dataset']
+    all_EEG_file = all_EEG_file + '_' + 'synchronised_' + config['preprocessing']
+    all_EEG_file = all_EEG_file + ('_hilbert.npz' if config['feature_extraction'] else '.npz')
+    return all_EEG_file
+config['all_EEG_file'] = build_file_name() # or use your own specified file name
+
+
+##################################################################
+##################################################################
+############### MODELS CONFIGURATIONS ############################
+##################################################################
+##################################################################
+# Specific to models now
 config['framework'] = 'pytorch'
 config['learning_rate'] = 1e-4
 config['early_stopping'] = True
 config['patience'] = 10
 
 
-
-# format for .npz data
-config['preprocessing_path'] = 'synchronised_' + config['preprocessing']
-config['all_EEG_file'] = config['task'] + '_with_' + config['dataset']
-config['all_EEG_file'] = config['all_EEG_file'] + '_' + config['preprocessing_path']
-config['all_EEG_file'] = config['all_EEG_file'] + ('_hilbert.npz' if config['feature_extraction'] else '.npz')
+##################################################################
+##################################################################
+############### HELPER VARIABLES #################################
+##################################################################
+##################################################################
 config['trainX_variable'] = 'EEG'
 config['trainY_variable'] = 'labels'
+
 
 def create_folder():
     if config['retrain']:
@@ -59,7 +80,7 @@ def create_folder():
 
     else:
         config['model_dir'] = config['log_dir'] + config['load_experiment_dir']
-        config['checkpoint_dir'] = config['model_dir'] + '/checkpoint/'
+        config['checkpoint_dir'] = config['model_dir'] + 'checkpoint/'
         stamp = str(int(time.time()))
         config['info_log'] = config['model_dir'] + '/' + 'inference_info_' + stamp + '.log'
         config['batches_log'] = config['model_dir'] + '/' + 'inference_batches_' + stamp + '.log'

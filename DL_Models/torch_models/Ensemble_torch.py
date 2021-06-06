@@ -54,8 +54,8 @@ class Ensemble_torch:
         # Create dataloaders
         trainX = np.transpose(trainX, (0, 2, 1))  # (batch_size, samples, channels) to (bs, ch, samples) as torch conv layers want it
         validX = np.transpose(validX, (0, 2, 1))  # (batch_size, samples, channels) to (bs, ch, samples) as torch conv layers want it
-        train_dataloader = create_dataloader(trainX, trainY, self.batch_size)
-        validation_dataloader = create_dataloader(validX, validY, self.batch_size)
+        train_dataloader = create_dataloader(trainX, trainY, self.batch_size, self.model_name)
+        validation_dataloader = create_dataloader(validX, validY, self.batch_size, self.model_name)
         # Fit the models 
         for i in range(self.nb_models):
             logging.info("------------------------------------------------------------------------------------")
@@ -73,7 +73,7 @@ class Ensemble_torch:
         dummy = np.zeros((a,b,c))
         print(dummy.shape)
         testX = np.concatenate((testX, dummy)) # TO ADD batch_size - testX.shape[0]%batch_size
-        test_dataloader = create_dataloader(testX, testX, self.batch_size, drop_last=False)
+        test_dataloader = create_dataloader(testX, testX, self.batch_size, self.model_name, drop_last=False)
         pred = None
         for model in self.models:
            if pred is not None:
@@ -83,13 +83,13 @@ class Ensemble_torch:
         pred = pred[:-a]
         return pred / self.nb_models # TODO: this might have to be rounded for majority decision in LR task
 
-
     def save(self, path):
         for i, model in enumerate(self.models):
             ckpt_dir = path + self.model_name + '_nb_{}_'.format(i) + 'best_model.pth'
-            torch.save(model.state_dict, ckpt_dir)
+            torch.save(model.state_dict(), ckpt_dir)
 
     def load(self, path):
+        self.models = []
         for file in os.listdir(path):
             if not self.load_file_pattern.match(file):
                 continue

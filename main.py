@@ -27,12 +27,15 @@ def main():
     logging.info('Started the Logging')
     start_time = time.time()
 
-    # For being able to see progress that some methods use verbose (for debugging purposes).
+    # For being able to see progress that some methods use verbose (for debugging purposes)
     f = open(config['model_dir'] + '/console.out', 'w')
     original = sys.stdout
     sys.stdout = Tee(sys.stdout, f)
 
+    #Load the data
     trainX, trainY = IOHelper.get_npz_data(config['data_dir'], verbose=True)
+
+    #Start benchmark
     benchmark(trainX, trainY)
     #directory = 'results/standardML'
     #print_table(directory, preprocessing='max')
