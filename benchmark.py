@@ -73,9 +73,9 @@ def try_models(trainX, trainY, ids, models, N=5, scoring=None, scale=False, save
             if config['save_models']:
                 trainer.save(path)
 
-            print(y_test.ravel().shape)
-            print(trainer.predict(X_test).shape)
-            score = scoring(y_test.ravel(), trainer.predict(X_test))
+            #print(y_test.ravel().shape)
+            #print(trainer.predict(X_test).shape)
+            score = scoring(y_test, trainer.predict(X_test))
 
             runtime = (time.time() - start_time)
             all_runs.append([name, score, runtime])
@@ -99,7 +99,7 @@ def benchmark(trainX, trainY):
 
     if config['task'] == 'LR_task':
         if config['dataset'] == 'antisaccade':
-            scoring = (lambda y, y_pred: accuracy_score(y, y_pred))  # Subject to change to mean euclidean distance.
+            scoring = (lambda y, y_pred: accuracy_score(y.ravel(), y_pred))  # Subject to change to mean euclidean distance.
             y = trainY[:,1] # The first column are the Id-s, we take the second which are labels
             try_models(trainX=trainX, trainY=y, ids=ids, models=models, scoring=scoring)
         else:
@@ -107,7 +107,7 @@ def benchmark(trainX, trainY):
 
     elif config['task'] == 'Direction_task':
         if config['dataset'] == 'dots':
-            scoring = (lambda y, y_pred : np.sqrt(mean_squared_error(y, y_pred)))
+            scoring = (lambda y, y_pred : np.sqrt(mean_squared_error(y.ravel(), y_pred)))
             y1 = trainY[:,1] # The first column are the Id-s, we take the second which are amplitude labels
             try_models(trainX=trainX, trainY=y1, ids=ids, models=models['amplitude'], scoring=scoring, save_trail='_amplitude')
             y2 = trainY[:,2] # The first column are the Id-s, second are the amplitude labels, we take the third which are the angle labels

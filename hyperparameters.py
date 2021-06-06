@@ -135,16 +135,16 @@ our_ML_models = {
     'Position_task' : {
         'dots' : {
             'max' : {
-                'KNN' : [StandardRegressor_2D, {'model_name':'KNN', 'leaf_size': 10, 'n_neighbors': 75, 'n_jobs' : -1}],
+                #'KNN' : [StandardRegressor_2D, {'model_name':'KNN', 'leaf_size': 10, 'n_neighbors': 75, 'n_jobs' : -1}],
                 'LinearReg' : [StandardRegressor_2D, {'model_name':'LinearReg', 'n_jobs' : -1}],
                 'Ridge' : [StandardRegressor_2D, {'model_name':'Ridge', 'alpha': 10000, 'tol' : 1e-5, 'max_iter' : 1200}],
-                'Lasso' : [StandardRegressor_2D, {'model_name':'Lasso', 'alpha': 1, 'tol' : 1e-5, 'max_iter' : 1200}],
-                'ElasticNet' : [StandardRegressor_2D, {'model_name':'ElasticNet', 'alpha': 1, 'l1_ratio' : 0.3, 'tol' : 1e-5, 'max_iter' : 1200}],
-                'RBF SVR' : [StandardRegressor_2D, {'model_name':'RBF SVR', 'C': 10, 'gamma': 0.01, 'tol' : 1e-5, 'max_iter' : 1200}],
-                'RandomForest' : [StandardRegressor_2D, {'model_name':'RandomForest', 'max_depth': 500, 'n_estimators': 50, 'n_jobs' : -1}],
-                'GradientBoost' : [StandardRegressor_2D, {'model_name':'GradientBoost', 'learning_rate': 0.05, 'max_depth': 5, 'n_estimators': 100}],
-                'AdaBoost' : [StandardRegressor_2D, {'model_name':'AdaBoost', 'learning_rate': 1, 'n_estimators': 10}],
-                'XGBoost' : [StandardRegressor_2D, {'model_name':'XGBoost', 'eta': 0.1, 'max_depth': 5, 'n_estimators': 100}]
+                #'Lasso' : [StandardRegressor_2D, {'model_name':'Lasso', 'alpha': 1, 'tol' : 1e-5, 'max_iter' : 1200}],
+                #'ElasticNet' : [StandardRegressor_2D, {'model_name':'ElasticNet', 'alpha': 1, 'l1_ratio' : 0.3, 'tol' : 1e-5, 'max_iter' : 1200}],
+                #'RBF SVR' : [StandardRegressor_2D, {'model_name':'RBF SVR', 'C': 10, 'gamma': 0.01, 'tol' : 1e-5, 'max_iter' : 1200}],
+                #'RandomForest' : [StandardRegressor_2D, {'model_name':'RandomForest', 'max_depth': 500, 'n_estimators': 50, 'n_jobs' : -1}],
+                #'GradientBoost' : [StandardRegressor_2D, {'model_name':'GradientBoost', 'learning_rate': 0.05, 'max_depth': 5, 'n_estimators': 100}],
+                #'AdaBoost' : [StandardRegressor_2D, {'model_name':'AdaBoost', 'learning_rate': 1, 'n_estimators': 10}],
+                #'XGBoost' : [StandardRegressor_2D, {'model_name':'XGBoost', 'eta': 0.1, 'max_depth': 5, 'n_estimators': 100}]
             },
             'min' : {
                 'KNN' : [StandardRegressor_2D, {'model_name':'KNN', 'leaf_size': 10, 'n_neighbors': 50, 'n_jobs' : -1}],
@@ -175,14 +175,14 @@ our_DL_models = {
             'max' : {
                 'CNN' : [Ensemble, {'model_name': 'CNN', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
                                     'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : True, 'depth' : depth}],
-                #'EEGNet' : [Ensemble, {'model_name' : 'EEGNet', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
-                #                       'epochs' : epochs, 'F1' : 16, 'F2' : 256, 'verbose' : verbose, 'D' : 4, 'kernel_size' : 256, 'dropout_rate' : 0.5}],
-                #'InceptionTime' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
-                #                              'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : True, 'depth' : depth}],
-                #'PyramidalCNN' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
-                #                              'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : False, 'depth' : 6}],
-                #'Xception' : [Ensemble, {'model_name': 'Xception', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
-               #                               'kernel_size': 40, 'epochs' : epochs, 'nb_filters' : 64, 'verbose' : verbose, 'use_residual' : True, 'depth' : 18}]
+                'EEGNet' : [Ensemble, {'model_name' : 'EEGNet', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
+                                       'epochs' : epochs, 'F1' : 16, 'F2' : 256, 'verbose' : verbose, 'D' : 4, 'kernel_size' : 256, 'dropout_rate' : 0.5}],
+                'InceptionTime' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
+                                              'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : True, 'depth' : depth}],
+                'PyramidalCNN' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
+                                              'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : False, 'depth' : 6}],
+                'Xception' : [Ensemble, {'model_name': 'Xception', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
+                                              'kernel_size': 40, 'epochs' : epochs, 'nb_filters' : 64, 'verbose' : verbose, 'use_residual' : True, 'depth' : 18}]
              },
             'min' : {
                 'CNN' : [Ensemble, {'model_name': 'CNN', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
@@ -278,14 +278,14 @@ our_DL_models = {
             'max' : {
                 'CNN' : [Ensemble, {'model_name': 'CNN', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 2,
                                     'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : True, 'depth' : depth}],
-                'EEGNet' : [Ensemble, {'model_name' : 'EEGNet', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 2,
-                                       'epochs' : epochs, 'F1' : 16, 'F2' : 256, 'verbose' : verbose, 'D' : 4, 'kernel_size' : 256, 'dropout_rate' : 0.5}],
-                'InceptionTime' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 2,
-                                              'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : True, 'depth' : depth}],
-                'PyramidalCNN' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 2,
-                                              'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : False, 'depth' : 6}],
-                'Xception' : [Ensemble, {'model_name': 'Xception', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 2,
-                                              'kernel_size': 40, 'epochs' : epochs, 'nb_filters' : 64, 'verbose' : verbose, 'use_residual' : True, 'depth' : 18}]
+                #'EEGNet' : [Ensemble, {'model_name' : 'EEGNet', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 2,
+                                       #'epochs' : epochs, 'F1' : 16, 'F2' : 256, 'verbose' : verbose, 'D' : 4, 'kernel_size' : 256, 'dropout_rate' : 0.5}],
+                #'InceptionTime' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 2,
+                                           #   'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : True, 'depth' : depth}],
+                #'PyramidalCNN' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 2,
+                                           #   'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : False, 'depth' : 6}],
+                #'Xception' : [Ensemble, {'model_name': 'Xception', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 2,
+                                          #    'kernel_size': 40, 'epochs' : epochs, 'nb_filters' : 64, 'verbose' : verbose, 'use_residual' : True, 'depth' : 18}]
             },
             'min' : {
                 'CNN' : [Ensemble, {'model_name': 'CNN', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 2,

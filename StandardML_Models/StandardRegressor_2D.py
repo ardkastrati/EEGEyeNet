@@ -58,7 +58,8 @@ class StandardRegressor_2D:
         testX = testX.reshape((-1, 258))  # TODO: A hack for now
         predict1 = self.model1.predict(testX)
         predict2 = self.model2.predict(testX)
-        return [predict1, predict2]
+        import numpy as np
+        return np.column_stack((predict1, predict2))
 
     def save(self, path):
         # save the model to disk
