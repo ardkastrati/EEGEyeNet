@@ -77,6 +77,7 @@ def try_models(trainX, trainY, ids, models, N=5, scoring=None, scale=False, save
             #print(trainer.predict(X_test).shape)
             score = scoring(y_test, trainer.predict(X_test))
 
+
             runtime = (time.time() - start_time)
             all_runs.append([name, score, runtime])
             model_runs.append([score, runtime])

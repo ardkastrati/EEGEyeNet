@@ -100,7 +100,7 @@ def test_loop(dataloader, model):
             pred = model(X)
             #print(pred.shape)
             #print(pred.detach().numpy().ravel().shape)
-            all_pred = np.concatenate([all_pred, pred.detach().numpy().ravel()])
+            all_pred = np.concatenate([all_pred, pred.cpu().data.numpy().ravel()])
             del X
             torch.cuda.empty_cache()
     return np.array(all_pred)  # Can be used for early stopping

@@ -162,9 +162,9 @@ our_ML_models = {
     }
 }
 
-nb_models = 2
+nb_models = 3
 batch_size = 64
-input_shape = (1, 258)
+input_shape = (500, 129)
 depth = 12
 epochs = 2
 verbose = True
