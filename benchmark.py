@@ -73,8 +73,9 @@ def try_models(trainX, trainY, ids, models, N=5, scoring=None, scale=False, save
             if config['save_models']:
                 trainer.save(path)
 
-            print(y_test.ravel().shape)
-            print(trainer.predict(X_test).shape)
+            print(y_test.ravel())
+            print(trainer.predict(X_test))
+            
             score = scoring(y_test.ravel(), trainer.predict(X_test))
 
             runtime = (time.time() - start_time)

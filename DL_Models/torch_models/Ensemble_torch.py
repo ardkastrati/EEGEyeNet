@@ -27,7 +27,7 @@ class Ensemble_torch:
         self.batch_size = batch_size
         self.loss = loss
         self.model_instance = None
-        self.load_file_pattern = re.compile(self.model_name + '_nb_._best_model.pth')
+        self.load_file_pattern = re.compile(self.model_name + '_nb_._best_model.pth', re.IGNORECASE)
         self.models = []
 
         if self.model_name == 'CNN':
@@ -71,17 +71,26 @@ class Ensemble_torch:
         a,b,c = testX.shape
         a = self.batch_size - a % self.batch_size
         dummy = np.zeros((a,b,c))
-        print(dummy.shape)
+        #print(dummy.shape)
         testX = np.concatenate((testX, dummy)) # TO ADD batch_size - testX.shape[0]%batch_size
         test_dataloader = create_dataloader(testX, testX, self.batch_size, self.model_name, drop_last=False)
         pred = None
         for model in self.models:
-           if pred is not None:
+            if torch.cuda.is_available():
+                model.cuda()
+            if pred is not None:
                 pred += test_loop(dataloader=test_dataloader, model=model)
-           else:
+            else:
                 pred = test_loop(dataloader=test_dataloader, model=model)
         pred = pred[:-a]
-        return pred / self.nb_models # TODO: this might have to be rounded for majority decision in LR task
+        print(f"prediction without division")
+        print(pred)
+        print("prediction after division")
+        print(pred/len(self.models))
+        print(f"nb models: {self.nb_models}")
+        print(f"self.models len {len(self.models)}")
+
+        return pred / len(self.models) # TODO: this might have to be rounded for majority decision in LR task
 
     def save(self, path):
         for i, model in enumerate(self.models):
@@ -89,6 +98,7 @@ class Ensemble_torch:
             torch.save(model.state_dict(), ckpt_dir)
 
     def load(self, path):
+        #print(f"cuda avail {torch.cuda.is_available()}")
         self.models = []
         for file in os.listdir(path):
             if not self.load_file_pattern.match(file):

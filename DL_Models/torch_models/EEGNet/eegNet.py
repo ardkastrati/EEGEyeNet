@@ -80,7 +80,8 @@ class EEGNet(BaseNet):
         logging.info(f"Number of trainable parameters: {sum(p.numel() for p in self.parameters() if p.requires_grad)}")
 
         if verbose and self.model_number == 0:
-            print(self)
+            #print(self)
+            pass
 
     def forward(self, x):
         """

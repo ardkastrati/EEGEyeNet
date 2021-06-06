@@ -12,10 +12,10 @@ config = dict()
 # 'LR_task' (dataset: 'antisaccade'):
 # 'Direction_task' (dataset: 'dots' or 'processing_speed'):
 # 'Position_task' (dataset: 'dots'):
-config['task'] = 'LR_task'
-config['dataset'] = 'antisaccade'
+config['task'] = 'Direction_task'
+config['dataset'] = 'dots'
 config['preprocessing'] = 'max'  # or min
-config['feature_extraction'] = True
+config['feature_extraction'] = False 
 
 
 ##################################################################
@@ -26,14 +26,14 @@ config['feature_extraction'] = True
 # Where experiment results are stored.
 config['log_dir'] = './runs/'
 # Path to training, validation and test data folders.
-config['data_dir'] = '../data/'
+config['data_dir'] = './data/'
 # Path of root
 config['root_dir'] = '.'
 # Retrain or load already trained
 config['retrain'] = False
 config['save_models'] = False
 # If retrain is false we need to provide where to load the experiment files
-config['load_experiment_dir'] = '1622985551/'
+config['load_experiment_dir'] = 'Amplitude_max/'
 # all_EEG_file should specify the name of the file where the prepared data is located (if emp
 def build_file_name():
     all_EEG_file = config['task'] + '_with_' + config['dataset']

@@ -162,9 +162,9 @@ our_ML_models = {
     }
 }
 
-nb_models = 2
+nb_models = 3
 batch_size = 64
-input_shape = (1, 258)
+input_shape = (500, 129)
 depth = 12
 epochs = 2
 verbose = True
@@ -175,14 +175,14 @@ our_DL_models = {
             'max' : {
                 'CNN' : [Ensemble, {'model_name': 'CNN', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
                                     'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : True, 'depth' : depth}],
-                #'EEGNet' : [Ensemble, {'model_name' : 'EEGNet', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
-                #                       'epochs' : epochs, 'F1' : 16, 'F2' : 256, 'verbose' : verbose, 'D' : 4, 'kernel_size' : 256, 'dropout_rate' : 0.5}],
-                #'InceptionTime' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
-                #                              'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : True, 'depth' : depth}],
-                #'PyramidalCNN' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
-                #                              'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : False, 'depth' : 6}],
-                #'Xception' : [Ensemble, {'model_name': 'Xception', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
-               #                               'kernel_size': 40, 'epochs' : epochs, 'nb_filters' : 64, 'verbose' : verbose, 'use_residual' : True, 'depth' : 18}]
+                'EEGNet' : [Ensemble, {'model_name' : 'EEGNet', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
+                                       'epochs' : epochs, 'F1' : 16, 'F2' : 256, 'verbose' : verbose, 'D' : 4, 'kernel_size' : 256, 'dropout_rate' : 0.5}],
+                'InceptionTime' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
+                                              'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : True, 'depth' : depth}],
+                'PyramidalCNN' : [Ensemble, {'model_name': 'InceptionTime', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
+                                              'kernel_size': 64, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : False, 'depth' : 6}],
+                'Xception' : [Ensemble, {'model_name': 'Xception', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
+                                              'kernel_size': 40, 'epochs' : epochs, 'nb_filters' : 64, 'verbose' : verbose, 'use_residual' : True, 'depth' : 18}]
              },
             'min' : {
                 'CNN' : [Ensemble, {'model_name': 'CNN', 'nb_models' : nb_models, 'loss':'bce', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,

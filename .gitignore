@@ -3,4 +3,6 @@
 *.pyc
 .DS_Store
 /runs/*
- 
+data/*
+run.sh
+log/*
