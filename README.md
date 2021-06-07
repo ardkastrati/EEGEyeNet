@@ -56,7 +56,7 @@ config['dataset'] = 'antisaccade'
 ```
 Choose the preprocessing variant, e.g.
 ```bash
-config['preprocessing'] = True
+config['preprocessing'] = 'min'
 ```
 Choose data preprocessed with Hilbert transformation. Set to True for the standard ML models:
 ```bash
