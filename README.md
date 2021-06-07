@@ -11,14 +11,19 @@ There are many dependencies in this benchmark and we propose to use anaconda as 
 
 ## General Requirements 
 Create a new conda environment: \
+'''bash 
 conda create -n eegeyenet_benchmark python=3.8.5 
+'''
 
 First install the general_requirements.txt \
+'''
 conda install --file general_requirements.txt 
-
+'''
 ## Pytorch Requirements 
-If you want to run the pytorch DL models, first install pytorch in the recommended way. For Linux users with GPU support this is: \
-conda install pytorch torchvision torchaudio cudatoolkit=11 -c pytorch \
+If you want to run the pytorch DL models, first install pytorch in the recommended way. For Linux users with GPU support this is: 
+'''
+conda install pytorch torchvision torchaudio cudatoolkit=11 -c pytorch 
+'''
 For other installation types and cuda versions, visit [pytorch.org](https://pytorch.org/get-started/locally/).
 
 ## Tensorflow Requirements 
@@ -64,12 +69,20 @@ You can add your own models in the your_models dictionary. Specify the models fo
 # Running the benchmark 
 Create a /run directory to save files while running models on the benchmark. 
 ## main.py 
-To run the benchmark, make sure to uncomment the benchmark() call in main.py 
+To run the benchmark, make sure to uncomment the benchmark() call in main.py and enable loading of data. The IOHelper will load the dataset that was specified via the settings in config.py 
+## benchmark.py 
+In benchmark.py we load all models specified in hyperparameters.py and try them with the scoring function corresponding to the task that is benchmarked. 
 
+Models will be tried one after another, save checkpoints to the checkpoint directory specified in config.py. Scores of each model are computed and reported. 
 
 # Add Custom Models 
+While trying the models we use a common interface called trainer. A trainer is an object that implements the following methods: \
+fit() \
+predict(X) \
+save() \
+load() \
 ## Implementation of custom models 
-
+To implement your own custom model make sure that you create a class that implements the above methods. 
 
 ## Adding custom models to our benchmark pipeline 
 
