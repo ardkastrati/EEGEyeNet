@@ -1,21 +1,21 @@
 ## Introduction EEGEyeNet
-EEGEyeNet is benchmark to evaluate ET prediction based on EEG measurements with an increasing level of difficulty
+EEGEyeNet is a benchmark to evaluate ET prediction based on EEG measurements with an increasing level of difficulty
 
 ## Overview 
 The repository consists of general functionality to run the benchmark and custom implementation of different machine learning models. We offer to run standard ML models (e.g. kNN, SVR, etc.) on the benchmark. The implementation can be found in the StandardML_Models directory. 
 
-Additionally, we implemented a range of different deep learning models. These can be run in both pytorch and tensorflow. The architecture of our DL models is such that it is easy to create own custom modules for convolutional neural networks, or even implement your own model on top of our BaseNet implementation. 
+Additionally, we implemented a range of different deep learning models. These can be run in both pytorch and tensorflow.
 
 ## Installation (Environment)
 There are many dependencies in this benchmark and we propose to use anaconda as package manager.
 
 ### General Requirements 
-Create a new conda environment: \
+Create a new conda environment: 
 ```bash 
 conda create -n eegeyenet_benchmark python=3.8.5 
 ```
 
-First install the general_requirements.txt \
+First install the general_requirements.txt 
 ```bash
 conda install --file general_requirements.txt 
 ```
@@ -27,7 +27,7 @@ conda install pytorch torchvision torchaudio cudatoolkit=11 -c pytorch
 For other installation types and cuda versions, visit [pytorch.org](https://pytorch.org/get-started/locally/).
 
 ### Tensorflow Requirements 
-If you want to run the tensorflow DL models, run \
+If you want to run the tensorflow DL models, run 
 ```bash
 conda install --file tensorflow_requirements.txt 
 ```
@@ -46,15 +46,38 @@ The model configuration takes place in hyperparameters.py. The training configur
 ### config.py
 We start by explaining the settings that can be made for running the benchmark: 
 
-config['task']: choose the task to run in the benchmark. \
-config['dataset']: choose the dataset used for the task. For some tasks we offer data from multiple paradigms. \
-config['preprocessing']: choose between minimal and maximal preprocessed data \
-config['feature_extraction']: load Hilbert transformation data. Use this for the standard ML models. \
-config['include_ML_models']: run our standard ML models as configured in hyperparameters.py \
-config['include_DL_models']: run our deep learning models as configured in hyperparameters.py \
-config['include_your_models']: include your own models that youconfigured in hyperparameters.py
-config['include_dummy_models']: run dummy models additionally to compare with your results \
-
+Choose the task to run in the benchmark, e.g. 
+```bash
+config['task'] = 'LR_task'
+```
+For some tasks we offer data from multiple paradigms. Choose the dataset used for the task, e.g.
+```bash
+config['dataset'] = 'antisaccade'
+```
+Choose the preprocessing variant, e.g.
+```bash
+config['preprocessing']
+```
+Choose data preprocessed with Hilbert transformation. Set to True for the standard ML models:
+```bash
+config['feature_extraction'] = True
+```
+Include our standard ML models into the benchmark run:
+```bash
+config['include_ML_models'] = True 
+```
+Include our deep learning models into the benchmark run:
+```bash
+config['include_DL_models']
+```
+Include your own models as specified in hyperparameters.py. For instructions on how to create your own custom models see further below.
+```bash
+config['include_your_models']
+```
+Include dummy models for comparison into the benchmark run:
+```bash 
+config['include_dummy_models']
+``` 
 You can either choose to train models or use existing ones in /run/ and perform inference with them. Set 
 ```bash
 config['retrain'] = True 
@@ -78,12 +101,14 @@ You can add your own models in the your_models dictionary. Specify the models fo
 ## Running the benchmark 
 Create a /run directory to save files while running models on the benchmark. 
 ### main.py 
-To run the benchmark, make sure to uncomment the benchmark() call in main.py and enable loading of data. The IOHelper will load the dataset that was specified via the settings in config.py. To start the benchmark, run
+To run the benchmark, make sure to uncomment the benchmark() call in main.py and data loading.
+
+The IOHelper will then load the dataset that was specified via the settings in config.py. To start the benchmark, run
 ```bash
 python3 main.py
 ```
 ### benchmark.py 
-In benchmark.py we load all models specified in hyperparameters.py and try them with the scoring function corresponding to the task that is benchmarked. 
+In benchmark.py we load all models specified in hyperparameters.py. Each model is fitted and then evaluated with the scoring function corresponding to the task that is benchmarked. 
 
 Models will be tried one after another, save checkpoints to the checkpoint directory specified in config.py. Scores of each model are computed and reported. 
 
