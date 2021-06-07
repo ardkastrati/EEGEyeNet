@@ -1,4 +1,4 @@
 pandas
 numpy 
-scikit-learn==0.24.1
-xgboost==1.4.2
+scipy 
+scikit-learn 
