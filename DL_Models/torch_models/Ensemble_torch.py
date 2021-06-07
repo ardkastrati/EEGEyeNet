@@ -27,8 +27,10 @@ class Ensemble_torch:
         self.batch_size = batch_size
         self.loss = loss
         self.model_instance = None
-        self.load_file_pattern = re.compile(self.model_name + '_nb_._best_model.pth', re.IGNORECASE)
+        self.load_file_pattern = re.compile(self.model_name[:3] +  '.*_nb_._best_model.pth', re.IGNORECASE)
         self.models = []
+
+        print(self.model_name[:3] +  '.*_nb_._best_model.pth')
 
         if self.model_name == 'CNN':
             from DL_Models.torch_models.CNN.CNN import CNN
@@ -75,6 +77,7 @@ class Ensemble_torch:
         testX = np.concatenate((testX, dummy)) # TO ADD batch_size - testX.shape[0]%batch_size
         test_dataloader = create_dataloader(testX, testX, self.batch_size, self.model_name, drop_last=False)
         pred = None
+        print(f"self models len {len(self.models)}")
         for model in self.models:
             if torch.cuda.is_available():
                 model.cuda()

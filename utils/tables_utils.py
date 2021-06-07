@@ -12,8 +12,7 @@ Task = {
         'angle' : 'Angle',
     },
     'Position_task' : {
-        'x' : 'Absolute Pos X',
-        'y' : 'Absolute Pos Y',
+        '-' : 'Absolute Pos',
     }
 }
 
