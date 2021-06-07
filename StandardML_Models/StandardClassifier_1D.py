@@ -31,6 +31,10 @@ class StandardClassifier_1D:
         elif self.model_name == 'XGBoost':
             from xgboost import XGBClassifier
             self.model = XGBClassifier(**model_params)
+        elif (self.model_name == 'Stratified' or self.model_name == 'MostFrequent' or
+              self.model_name == 'Prior' or self.model_name == 'Uniform'):
+            from sklearn.dummy import DummyClassifier
+            self.model = DummyClassifier(**model_params)
 
     def fit(self, trainX, trainY, validX, validY):
         trainX = trainX.reshape((-1, 258))  # TODO: A hack for now

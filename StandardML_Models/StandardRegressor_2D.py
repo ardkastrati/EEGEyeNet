@@ -48,6 +48,14 @@ class StandardRegressor_2D:
             from xgboost import XGBRegressor
             self.model1 = XGBRegressor(**model_params)
             self.model2 = XGBRegressor(**model_params)
+        elif self.model_name == 'Mean' or self.model_name == 'Median':
+            from sklearn.dummy import DummyRegressor
+            self.model1 = DummyRegressor(**model_params)
+            self.model2 = DummyRegressor(**model_params)
+        elif self.model_name == 'Constant':
+            from sklearn.dummy import DummyRegressor
+            self.model1 = DummyRegressor(**model_params, constant=400)
+            self.model2 = DummyRegressor(**model_params, constant=300)
 
     def fit(self, trainX, trainY, validX, validY):
         trainX = trainX.reshape((-1, 258))  # TODO: A hack for now

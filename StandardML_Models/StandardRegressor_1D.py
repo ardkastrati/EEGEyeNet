@@ -37,6 +37,9 @@ class StandardRegressor_1D:
         elif self.model_name == 'XGBoost':
             from xgboost import XGBRegressor
             self.model = XGBRegressor(**model_params)
+        elif self.model_name == 'Mean' or self.model_name == 'Median':
+            from sklearn.dummy import DummyRegressor
+            self.model = DummyRegressor(**model_params)
 
     def fit(self, trainX, trainY, validX, validY):
         trainX = trainX.reshape((-1, 258))  # TODO: A hack for now

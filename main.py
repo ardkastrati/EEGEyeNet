@@ -19,7 +19,10 @@ class Tee(object):
 
 """
 Main entry of the program
+Creates the logging files, loads the data and starts the benchmark.
+All configurations (parameters) of this benchmark are specified in config.py
 """
+
 def main():
     # Setting up logging
     create_folder()
