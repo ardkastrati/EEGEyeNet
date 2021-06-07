@@ -6,7 +6,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 from config import config
-from hyperparameters import allmodels
+from hyperparameters import all_models
 import os
 
 
@@ -36,7 +36,6 @@ def try_models(trainX, trainY, ids, models, N=5, scoring=None, scale=False, save
     X_train, y_train = trainX[train], trainY[train]
     X_val, y_val = trainX[val], trainY[val]
     X_test, y_test = trainX[test], trainY[test]
-
 
     if scale:
         logging.info('Standard Scaling')
@@ -73,10 +72,11 @@ def try_models(trainX, trainY, ids, models, N=5, scoring=None, scale=False, save
             if config['save_models']:
                 trainer.save(path)
 
+            pred = trainer.predict(X_test)
             print(y_test.shape)
-            print(trainer.predict(X_test).shape)
-            score = scoring(y_test, trainer.predict(X_test))
-
+            print(pred.shape)
+            score = scoring(y_test, pred)
+            print(score)
 
             runtime = (time.time() - start_time)
             all_runs.append([name, score, runtime])
@@ -94,13 +94,13 @@ def try_models(trainX, trainY, ids, models, N=5, scoring=None, scale=False, save
 
 def benchmark(trainX, trainY):
     np.savetxt(config['model_dir']+'/config.csv', [config['task'], config['dataset'], config['preprocessing']], fmt='%s')
-    models = allmodels[config['task']][config['dataset']][config['preprocessing']]
+    models = all_models[config['task']][config['dataset']][config['preprocessing']]
 
     ids = trainY[:, 0]
 
     if config['task'] == 'LR_task':
         if config['dataset'] == 'antisaccade':
-            scoring = (lambda y, y_pred: accuracy_score(y.ravel(), y_pred))  # Subject to change to mean euclidean distance.
+            scoring = (lambda y, y_pred: accuracy_score(y, y_pred.ravel()))  # Subject to change to mean euclidean distance.
             y = trainY[:,1] # The first column are the Id-s, we take the second which are labels
             try_models(trainX=trainX, trainY=y, ids=ids, models=models, scoring=scoring)
         else:
@@ -108,10 +108,10 @@ def benchmark(trainX, trainY):
 
     elif config['task'] == 'Direction_task':
         if config['dataset'] == 'dots':
-            scoring = (lambda y, y_pred : np.sqrt(mean_squared_error(y.ravel(), y_pred)))
+            scoring = (lambda y, y_pred : np.sqrt(mean_squared_error(y, y_pred.ravel())))
             y1 = trainY[:,1] # The first column are the Id-s, we take the second which are amplitude labels
             try_models(trainX=trainX, trainY=y1, ids=ids, models=models['amplitude'], scoring=scoring, save_trail='_amplitude')
-            scoring2 = (lambda y, y_pred: np.sqrt(np.mean(np.square(np.arctan2(np.sin(y.ravel() - y_pred), np.cos(y.ravel() - y_pred))))))
+            scoring2 = (lambda y, y_pred: np.sqrt(np.mean(np.square(np.arctan2(np.sin(y - y_pred.ravel()), np.cos(y - y_pred.ravel()))))))
             y2 = trainY[:,2] # The first column are the Id-s, second are the amplitude labels, we take the third which are the angle labels
             try_models(trainX=trainX, trainY=y2, ids=ids, models=models['angle'], scoring=scoring2, save_trail='_angle')
         else:

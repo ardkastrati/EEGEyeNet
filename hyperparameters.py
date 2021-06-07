@@ -3,10 +3,12 @@ from StandardML_Models.StandardRegressor_1D import StandardRegressor_1D
 from StandardML_Models.StandardRegressor_2D import StandardRegressor_2D
 from StandardML_Models.StandardClassifier_1D import StandardClassifier_1D
 from DL_Models.Ensemble import Ensemble
+from config import config
 
 # Use the following formats to add your own models (see hyperparameters.py for examples)
 # 'NAME' : [MODEL, {'param1' : value1, 'param2' : value2, ...}]
 # the model should be callable with MODEL(param1=value1, param2=value2, ...)
+
 your_models = {
     'LR_task': {
 
@@ -232,11 +234,11 @@ our_ML_dummy_models = {
     }
 }
 
-nb_models = 5
+nb_models = 1
 batch_size = 64
-input_shape = (500, 129)
+input_shape = (1, 258) if config['feature_extraction'] else (500, 129)
 depth = 12
-epochs = 50
+epochs = 2
 verbose = True
 
 our_DL_models = {
@@ -294,7 +296,7 @@ our_DL_models = {
                     'PyramidalCNN' : [Ensemble, {'model_name': 'PyramidalCNN', 'nb_models' : nb_models, 'loss':'angle-loss', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
                                               'kernel_size': 16, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : False, 'depth' : 6}],
                     'Xception' : [Ensemble, {'model_name': 'Xception', 'nb_models' : nb_models, 'loss':'angle-loss', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
-                                              'kernel_size': 40, 'epochs' : epochs, 'nb_filters' : 64, 'verbose' : verbose, 'use_residual' : True, 'depth' : 18}]
+                                             'kernel_size': 40, 'epochs' : epochs, 'nb_filters' : 64, 'verbose' : verbose, 'use_residual' : True, 'depth' : 18}]
                 }
             },
             'min' : {
@@ -308,7 +310,7 @@ our_DL_models = {
                     'PyramidalCNN' : [Ensemble, {'model_name': 'PyramidalCNN', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
                                               'kernel_size': 16, 'epochs' : epochs, 'nb_filters' : 16, 'verbose' : verbose, 'use_residual' : False, 'depth' : 6}],
                     'Xception' : [Ensemble, {'model_name': 'Xception', 'nb_models' : nb_models, 'loss':'mse', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
-                                              'kernel_size': 40, 'epochs' : epochs, 'nb_filters' : 64, 'verbose' : verbose, 'use_residual' : True, 'depth' : 18}]
+                                             'kernel_size': 40, 'epochs' : epochs, 'nb_filters' : 64, 'verbose' : verbose, 'use_residual' : True, 'depth' : 18}]
                 },
                 'angle' : {
                     'CNN' : [Ensemble, {'model_name': 'CNN', 'nb_models' : nb_models, 'loss':'angle-loss', 'batch_size': batch_size, 'input_shape': input_shape, 'output_shape' : 1,
@@ -389,4 +391,13 @@ def merge_models(base_dict, new_dict):
             result[k] = new_dict[k]
     return result
 
-allmodels = our_ML_dummy_models
+all_models = dict()
+
+if config['include_ML_models']:
+    all_models = merge_models(all_models, our_ML_models)
+if config['include_DL_models']:
+    all_models = merge_models(all_models, our_DL_models)
+if config['include_dummy_models']:
+    all_models = merge_models(all_models, our_ML_dummy_models)
+if config['include_your_models']:
+    all_models = merge_models(all_models, your_models)

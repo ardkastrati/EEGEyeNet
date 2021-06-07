@@ -10,12 +10,16 @@ config = dict()
 ##################################################################
 ##################################################################
 # 'LR_task' (dataset: 'antisaccade'):
-# 'Direction_task' (dataset: 'dots' or 'processing_speed'):
+# 'Direction_task' (dataset: 'dots' or 'processing_speed'): dots = "Large Grid Dataset" and processing_speed = "Visual Symbol Search"
 # 'Position_task' (dataset: 'dots'):
 config['task'] = 'Position_task'
 config['dataset'] = 'dots'
-config['preprocessing'] = 'max'  # or min
-config['feature_extraction'] = False
+config['preprocessing'] = 'min'  # or min
+config['feature_extraction'] = True
+config['include_ML_models'] = True
+config['include_DL_models'] = True
+config['include_your_models'] = True
+config['include_dummy_models'] = True
 
 ##################################################################
 ##################################################################
@@ -51,7 +55,7 @@ config['all_EEG_file'] = build_file_name() # or use your own specified file name
 config['framework'] = 'pytorch'
 config['learning_rate'] = 1e-4
 config['early_stopping'] = True
-config['patience'] = 10
+config['patience'] = 20
 
 
 ##################################################################
