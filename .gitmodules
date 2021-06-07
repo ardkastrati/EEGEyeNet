@@ -1,0 +1,3 @@
+[submodule "EEGEyeNet-DataPreparation"]
+	path = EEGEyeNet-DataPreparation
+	url = https://github.com/ardkastrati/EEGEyeNet-DataPreparation.git
