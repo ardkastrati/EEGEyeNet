@@ -111,8 +111,9 @@ def benchmark(trainX, trainY):
             scoring = (lambda y, y_pred : np.sqrt(mean_squared_error(y.ravel(), y_pred)))
             y1 = trainY[:,1] # The first column are the Id-s, we take the second which are amplitude labels
             try_models(trainX=trainX, trainY=y1, ids=ids, models=models['amplitude'], scoring=scoring, save_trail='_amplitude')
+            scoring2 = (lambda y, y_pred: np.sqrt(np.mean(np.square(np.arctan2(np.sin(y.ravel() - y_pred), np.cos(y.ravel() - y_pred))))))
             y2 = trainY[:,2] # The first column are the Id-s, second are the amplitude labels, we take the third which are the angle labels
-            try_models(trainX=trainX, trainY=y2, ids=ids, models=models['angle'], scoring=scoring, save_trail='_angle')
+            try_models(trainX=trainX, trainY=y2, ids=ids, models=models['angle'], scoring=scoring2, save_trail='_angle')
         else:
             raise ValueError("This task cannot be predicted (is not implemented yet) with the given dataset.")
 
