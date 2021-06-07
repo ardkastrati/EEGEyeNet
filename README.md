@@ -56,7 +56,7 @@ config['dataset'] = 'antisaccade'
 ```
 Choose the preprocessing variant, e.g.
 ```bash
-config['preprocessing']
+config['preprocessing'] = True
 ```
 Choose data preprocessed with Hilbert transformation. Set to True for the standard ML models:
 ```bash
@@ -68,15 +68,15 @@ config['include_ML_models'] = True
 ```
 Include our deep learning models into the benchmark run:
 ```bash
-config['include_DL_models']
+config['include_DL_models'] = True
 ```
 Include your own models as specified in hyperparameters.py. For instructions on how to create your own custom models see further below.
 ```bash
-config['include_your_models']
+config['include_your_models'] = True
 ```
 Include dummy models for comparison into the benchmark run:
 ```bash 
-config['include_dummy_models']
+config['include_dummy_models'] = True
 ``` 
 You can either choose to train models or use existing ones in /run/ and perform inference with them. Set 
 ```bash
