@@ -30,8 +30,6 @@ class Ensemble_torch:
         self.load_file_pattern = re.compile(self.model_name[:3] +  '.*_nb_._best_model.pth', re.IGNORECASE)
         self.models = []
 
-        print(self.model_name[:3] +  '.*_nb_._best_model.pth')
-
         if self.model_name == 'CNN':
             from DL_Models.torch_models.CNN.CNN import CNN
             self.model = CNN
