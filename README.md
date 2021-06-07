@@ -100,17 +100,15 @@ You can add your own models in the your_models dictionary. Specify the models fo
 
 ## Running the benchmark 
 Create a /run directory to save files while running models on the benchmark. 
-### main.py 
-To run the benchmark, make sure to uncomment the benchmark() call in main.py and data loading.
 
-The IOHelper will then load the dataset that was specified via the settings in config.py. To start the benchmark, run
+### benchmark.py 
+In benchmark.py we load all models specified in hyperparameters.py. Each model is fitted and then evaluated with the scoring function corresponding to the task that is benchmarked. 
+### main.py 
+To start the benchmark, run
 ```bash
 python3 main.py
 ```
-### benchmark.py 
-In benchmark.py we load all models specified in hyperparameters.py. Each model is fitted and then evaluated with the scoring function corresponding to the task that is benchmarked. 
-
-Models will be tried one after another, save checkpoints to the checkpoint directory specified in config.py. Scores of each model are computed and reported. 
+A directory of the current run is created, containing a training log, saving console output and model checkpoints of all runs.
 
 ## Add Custom Models 
 To benchmark models we use a common interface we call trainer. A trainer is an object that implements the following methods: 
