@@ -22,7 +22,7 @@ conda install --file general_requirements.txt
 ### Pytorch Requirements 
 If you want to run the pytorch DL models, first install pytorch in the recommended way. For Linux users with GPU support this is: 
 ```bash
-conda install pytorch torchvision torchaudio cudatoolkit=11 -c pytorch 
+conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch 
 ```
 For other installation types and cuda versions, visit [pytorch.org](https://pytorch.org/get-started/locally/).
 
