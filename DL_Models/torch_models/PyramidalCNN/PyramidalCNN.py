@@ -25,7 +25,7 @@ class PyramidalCNN(ConvNet):
         """
         return nn.Sequential(
             Pad_Conv(kernel_size=self.kernel_size),
-            nn.Conv1d(in_channels=129 if depth==0 else depth*self.nb_filters,
+            nn.Conv1d(in_channels=self.nb_channels if depth==0 else depth*self.nb_filters,
                         out_channels=(depth+1)*self.nb_filters, 
                         kernel_size=self.kernel_size, 
                         bias=False),
