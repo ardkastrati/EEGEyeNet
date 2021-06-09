@@ -1,4 +1,4 @@
-name: tencu10
+name: eegeyenet_benchmark
 channels:
   - pytorch
   - anaconda
