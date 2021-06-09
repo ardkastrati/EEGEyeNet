@@ -4,7 +4,7 @@ EEGEyeNet is a benchmark to evaluate ET prediction based on EEG measurements wit
 ## Overview 
 The repository consists of general functionality to run the benchmark and custom implementation of different machine learning models. We offer to run standard ML models (e.g. kNN, SVR, etc.) on the benchmark. The implementation can be found in the StandardML_Models directory. 
 
-Additionally, we implemented a range of different deep learning models. These can be run in both pytorch and tensorflow.
+Additionally, we implemented a variety of deep learning models. These are implemented and can be run in both pytorch and tensorflow.
 
 The benchmark consists of three tasks: \
 LR (left-right), Direction (Angle, Amplitude) and Coordinates (x,y) 
