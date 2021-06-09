@@ -1,14 +1,23 @@
 ## Introduction EEGEyeNet
-EEGEyeNet is a benchmark to evaluate ET prediction based on EEG measurements with an increasing level of difficulty
+EEGEyeNet is a benchmark to evaluate ET prediction based on EEG measurements with an increasing level of difficulty.
 
 ## Overview 
 The repository consists of general functionality to run the benchmark and custom implementation of different machine learning models. We offer to run standard ML models (e.g. kNN, SVR, etc.) on the benchmark. The implementation can be found in the StandardML_Models directory. 
 
 Additionally, we implemented a range of different deep learning models. These can be run in both pytorch and tensorflow.
 
+The benchmark consists of three tasks: \
+LR (left-right), Direction (Angle, Amplitude) and Coordinates (x,y) 
+
 ## Installation (Environment)
 There are many dependencies in this benchmark and we propose to use anaconda as package manager.
 
+You can install a full environment to run all models (standard machine learning and deep learning models in both pytorch and tensorflow) from the eegeyenet_benchmark.yml file. To do so, run:
+```bash 
+conda env create -f eegeyenet_benchmark.yml
+```
+
+Otherwise you can also only create a minimal environment that is able to run the models that you want to try (see following section). 
 ### General Requirements 
 Create a new conda environment: 
 ```bash 
