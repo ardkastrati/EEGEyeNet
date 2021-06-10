@@ -2,7 +2,7 @@ import tensorflow as tf
 from config import config
 from utils.utils import *
 import logging
-from tf_models.ConvNet import ConvNet
+from DL_Models.tf_models.ConvNet import ConvNet
 
 
 class INCEPTION(ConvNet):
@@ -14,16 +14,13 @@ class INCEPTION(ConvNet):
     Daniel F. Schmidt, Jonathan Weber, Geoffrey I. Webb, Lhassane Idoumghar, Pierre-Alain Muller, François Petitjean
     """
 
-    def __init__(self, input_shape, kernel_size=64, epochs = 50, nb_filters=16, verbose=True, 
-                            batch_size=64, use_residual=True, depth=12, bottleneck_size=16, model_number=0):
+    def __init__(self, loss, model_number, batch_size, input_shape, output_shape, kernel_size=64, epochs = 50, nb_filters=16, verbose=True,
+                            use_residual=True, depth=12, bottleneck_size=16):
         self.bottleneck_size = bottleneck_size
-        super(INCEPTION, self).__init__(input_shape, kernel_size=kernel_size, epochs=epochs, 
+        super(INCEPTION, self).__init__(input_shape=input_shape, output_shape=output_shape, loss=loss, kernel_size=kernel_size, epochs=epochs, 
                             nb_filters=nb_filters, verbose=verbose, batch_size=batch_size, 
                             use_residual=use_residual, depth=depth, model_number=model_number)
         logging.info('--------------- bottleneck_size : ' + str(self.bottleneck_size))
-
-    def __str__(self):
-        return self.__class__.__name__
         
     def _module(self, input_tensor, current_depth):
         """

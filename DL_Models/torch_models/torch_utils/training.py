@@ -40,7 +40,7 @@ def train_loop(dataloader, model, loss_name, loss_fn, optimizer):
 
     loss = training_loss / size 
     logging.info(f"Avg training loss: {loss:>7f}")
-    if config['task'] == 'prosaccade-clf':  
+    if config['task'] == 'LR_task':  
         accuracy = correct / num_datapoints           
         logging.info(f"Avg training accuracy {accuracy:>8f}")
         return float(loss), float(accuracy) 
@@ -80,7 +80,7 @@ def validation_loop(dataloader, model, loss_name, loss_fn):
     
     loss = val_loss / num_batches
     logging.info(f"Avg validation loss: {loss:>8f}")
-    if config['task'] == 'prosaccade-clf':
+    if config['task'] == 'LR_task':
         accuracy = correct / size
         logging.info(f"Avg validation accuracy {accuracy:>8f}")
         return float(loss), float(accuracy)

@@ -2,7 +2,7 @@ import tensorflow as tf
 from config import config
 from utils.utils import *
 import logging
-from tf_models.ConvNet import ConvNet
+from DL_Models.tf_models.ConvNet import ConvNet
 from tensorflow.keras.constraints import max_norm
 
 
@@ -11,10 +11,10 @@ class PyramidalCNN(ConvNet):
     The Classifier_PyramidalCNN is one of the simplest classifiers. It implements the class ConvNet, which is made of modules with a
     specific depth, where for each depth the number of filters is increased.
     """
-    def __init__(self, input_shape, kernel_size=16, epochs = 50, nb_filters=16, verbose=True, batch_size=64, 
-                    use_residual=False, depth=6, model_number=0):
+    def __init__(self, loss, model_number, batch_size, input_shape, output_shape, kernel_size=16, epochs = 50, nb_filters=16, verbose=True,
+                    use_residual=False, depth=6):
 
-        super(PyramidalCNN, self).__init__(input_shape, kernel_size=kernel_size, epochs=epochs, nb_filters=nb_filters,
+        super(PyramidalCNN, self).__init__(input_shape=input_shape, output_shape=output_shape, loss=loss, kernel_size=kernel_size, epochs=epochs, nb_filters=nb_filters,
                     verbose=verbose, batch_size=batch_size, use_residual=use_residual, depth=depth, model_number=model_number)
 
     def __str__(self):

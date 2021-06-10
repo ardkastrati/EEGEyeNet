@@ -75,7 +75,7 @@ class Ensemble_torch:
         testX = np.concatenate((testX, dummy)) # TO ADD batch_size - testX.shape[0]%batch_size
         test_dataloader = create_dataloader(testX, testX, self.batch_size, self.model_name, drop_last=False)
         pred = None
-        print(f"self models len {len(self.models)}")
+        #print(f"self models len {len(self.models)}")
         for model in self.models:
             if torch.cuda.is_available():
                 model.cuda()
@@ -84,11 +84,11 @@ class Ensemble_torch:
             else:
                 pred = test_loop(dataloader=test_dataloader, model=model)
         pred = pred[:-a]
-        return pred / len(self.models) # TODO: this might have to be rounded for majority decision in LR task
+        return pred / len(self.models) 
 
     def save(self, path):
         for i, model in enumerate(self.models):
-            ckpt_dir = path + self.model_name + '_nb_{}_'.format(i) + 'best_model.pth'
+            ckpt_dir = path + self.model_name + '_nb_{}_'.format(i) + '.pth'
             torch.save(model.state_dict(), ckpt_dir)
 
     def load(self, path):
@@ -101,7 +101,7 @@ class Ensemble_torch:
             logging.info(f"Loading model nb from file {file} and predict with it")
             model = self.model(loss=self.loss, model_number=0, batch_size=self.batch_size,
                                **self.model_params)  # model = TheModelClass(*args, **kwargs)
-            print(path + file)
+            #print(path + file)
             model.load_state_dict(torch.load(path + file))  # model.load_state_dict(torch.load(PATH))
             model.eval()  # needed before prediction
             self.models.append(model)

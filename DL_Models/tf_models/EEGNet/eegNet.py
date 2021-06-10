@@ -2,7 +2,7 @@ import tensorflow as tf
 import tensorflow.keras as keras
 from config import config
 from utils.utils import *
-from tf_models.BaseNet import BaseNet
+from DL_Models.tf_models.BaseNet import BaseNet
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Dense, Activation, Permute, Dropout
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, AveragePooling2D
@@ -23,22 +23,24 @@ class EEGNet(BaseNet):
     Vernon J. Lawhern, Amelia J. Solon, Nicholas R. Waytowich, Stephen M. Gordon, Chou P. Hung, Brent J. Lance
     """
 
-    def __init__(self, nb_classes=1, chans = config['eegnet']['channels'],
-            samples = config['eegnet']['samples'], dropoutRate = 0.5, kernLength = 250, F1 = 16,
-            D = 4, F2 = 256, norm_rate = 0.5, dropoutType = 'Dropout', epochs = 50, verbose = True, 
-            X = None, model_number=0):
+    def __init__(self, loss, model_number, batch_size, input_shape, output_shape, epochs=50, 
+                F1 = 16, F2 = 256, verbose = True, D=4, kernel_size=250, dropout_rate = 0.5,
+                norm_rate = 0.5, dropoutType = 'Dropout', X = None):
 
-        self.nb_classes = nb_classes
-        self.chans = chans
-        self.samples = samples
-        self.dropoutRate = dropoutRate
-        self.kernLength = kernLength
+        #self.nb_classes = nb_classes
+        self.chans = input_shape[1]
+        self.samples = input_shape[0]
+        self.dropoutRate = dropout_rate
+        self.kernLength = kernel_size
+        self.loss = loss 
+        self.batch_size = batch_size
+        self.output_shape = output_shape
         self.F1 = F1
         self.D = D
         self.F2 = F2
         self.norm_rate = norm_rate
         self.dropoutType = dropoutType
-        super(EEGNet, self).__init__(epochs=epochs, verbose=verbose, model_number=model_number)
+        super(EEGNet, self).__init__(loss=loss, input_shape=input_shape, output_shape=output_shape, epochs=epochs, verbose=verbose, model_number=model_number)
         logging.info('Parameters...')
         logging.info('--------------- chans            : ' + str(self.chans))
         logging.info('--------------- samples          : ' + str(self.samples))
@@ -48,9 +50,6 @@ class EEGNet(BaseNet):
         logging.info('--------------- D                : ' + str(self.D))
         logging.info('--------------- F2               : ' + str(self.F2))
         logging.info('--------------- norm_rate        : ' + str(self.norm_rate))
-
-    def __str__(self):
-        return self.__class__.__name__
         
     def _split_model(self):
         """
@@ -88,11 +87,8 @@ class EEGNet(BaseNet):
         else:
             raise ValueError('dropoutType must be one of SpatialDropout2D '
                              'or Dropout, passed as a string.')
-        if config['split']:
-            input1 = X
-            self.chans=len(config['cluster'][c])
-        else:
-            input1 = Input(shape=(self.chans, self.samples, 1))
+        
+        input1 = Input(shape=(self.chans, self.samples, 1))
 
         block1 = Conv2D(self.F1, (1, self.kernLength), padding='same',
                         input_shape=(self.chans, self.samples, 1),
@@ -114,22 +110,13 @@ class EEGNet(BaseNet):
         block2 = dropoutType(self.dropoutRate)(block2)
 
         flatten = Flatten()(block2)
-        if config['split']:
-            return flatten
-        
-        #else:
-         #   dense = Dense(self.nb_classes, name='dense',
-          #            kernel_constraint=max_norm(self.norm_rate))(flatten)
-           # softmax = Activation('sigmoid', name='sigmoid')(dense)
-        
-        if config['task'] == 'prosaccade_clf':
-            output_layer = tf.keras.layers.Dense(1, activation='sigmoid')(flatten)
-        elif config['task'] == 'gaze-reg':
-            output_layer = tf.keras.layers.Dense(2, activation='linear')(flatten)
-        else: #elif config['task'] == 'angle-reg':
-            output_layer = tf.keras.layers.Dense(1, activation='linear')(flatten) 
-        #else: 
-            #TODO: implement for event detection task
-          #  pass 
+
+        # Create output layer depending on task
+        if self.loss == 'bce':
+            output_layer = tf.keras.layers.Dense(self.output_shape, activation='sigmoid')(flatten)
+        elif self.loss == 'mse' or 'angle-loss':
+            output_layer = tf.keras.layers.Dense(self.output_shape, activation='linear')(flatten)
+        else:
+            raise ValueError("Choose a valid task")
 
         return Model(inputs=input1, outputs=output_layer)

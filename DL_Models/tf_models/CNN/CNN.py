@@ -2,7 +2,7 @@ import tensorflow as tf
 from config import config
 from utils.utils import *
 import logging
-from tf_models.ConvNet import ConvNet
+from DL_Models.tf_models.ConvNet import ConvNet
 from tensorflow.keras.constraints import max_norm
 
 
@@ -12,8 +12,8 @@ class CNN(ConvNet):
     It can be used for both classification and regression models based on the ConvNet class. 
     """
 
-    def __init__(self, input_shape, output_shape, loss, kernel_size=64, epochs = 50, nb_filters=16, verbose=True, batch_size=64, 
-                use_residual=True, depth=12, regularization=0.01, model_number=0):
+    def __init__(self, loss, model_number, batch_size, input_shape, output_shape, kernel_size=64, epochs = 50, nb_filters=16, verbose=True,
+                use_residual=True, depth=12, regularization=0):
         
         self.regularization = regularization
         self.__name__ = 'CNN'
@@ -29,7 +29,6 @@ class CNN(ConvNet):
         """
         The module of CNN is made of a simple convolution with batch normalization and ReLu activation. Finally, MaxPooling is also used.
         """
-
         x = tf.keras.layers.Conv1D(filters=self.nb_filters, kernel_size=self.kernel_size, padding='same', use_bias=False)(input_tensor)
         x = tf.keras.layers.BatchNormalization()(x)
         x = tf.keras.layers.Activation(activation='relu')(x)

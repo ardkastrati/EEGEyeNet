@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-from tf_models.BaseNet import BaseNet
+from DL_Models.tf_models.BaseNet import BaseNet
 import tensorflow as tf
 import tensorflow.keras as keras
-from config import config
 import logging
 
 
@@ -17,7 +16,7 @@ class ConvNet(ABC, BaseNet):
         self.nb_filters = nb_filters
         self.preprocessing = preprocessing
         self.input_shape = input_shape
-        super(ConvNet, self).__init__(output_shape=output_shape, loss=loss, epochs=epochs, verbose=verbose, model_number=model_number)
+        super(ConvNet, self).__init__(input_shape=input_shape, output_shape=output_shape, loss=loss, epochs=epochs, verbose=verbose, model_number=model_number)
         logging.info('Parameters of {}, model number {}: '.format(self, model_number))
         logging.info('--------------- use residual : ' + str(self.use_residual))
         logging.info('--------------- depth        : ' + str(self.depth))
@@ -25,23 +24,6 @@ class ConvNet(ABC, BaseNet):
         logging.info('--------------- kernel size  : ' + str(self.kernel_size))
         logging.info('--------------- nb filters   : ' + str(self.nb_filters))
         logging.info('--------------- preprocessing: ' + str(self.preprocessing))
-
-    def _split_model(self):
-        input_layer = keras.layers.Input(self.input_shape)
-        output = []
-
-        for c in config['cluster'].keys():
-            a = [self.input_shape[0]]
-            a.append(len(config['cluster'][c]))
-            input_shape = tuple(a)
-            output.append(self._build_model(X=tf.transpose(tf.nn.embedding_lookup(tf.transpose(input_layer), config['cluster'][c]))))
-
-        # append the results and perform 1 dense layer with last_channel dimension and the output layer
-        x = tf.keras.layers.Concatenate()(output)
-        dense = tf.keras.layers.Dense(32, activation='relu')(x)
-        output_layer = tf.keras.layers.Dense(1, activation='sigmoid')(dense)
-        model = tf.keras.models.Model(inputs=input_layer, outputs=output_layer)
-        return model
 
     # abstract method
     def _preprocessing(self, input_tensor):
@@ -59,10 +41,7 @@ class ConvNet(ABC, BaseNet):
         return x
 
     def _build_model(self, X=[]):
-        if config['split']:
-            input_layer = X
-        else:
-            input_layer = tf.keras.layers.Input(self.input_shape)
+        input_layer = tf.keras.layers.Input(self.input_shape)
 
         if self.preprocessing:
             preprocessed = self._preprocessing(input_layer)
@@ -79,17 +58,17 @@ class ConvNet(ABC, BaseNet):
                 input_res = x
 
         gap_layer = tf.keras.layers.GlobalAveragePooling1D()(x)
-        if config['split']:
-            return gap_layer
-            
-        if self.loss == 'prosaccade_clf':
-            output_layer = tf.keras.layers.Dense(1, activation='sigmoid')(gap_layer)
-        elif config['task'] == 'gaze-reg':
-            output_layer = tf.keras.layers.Dense(2, activation='linear')(gap_layer)
-        else: #elif config['task'] == 'angle-reg':
-            output_layer = tf.keras.layers.Dense(1, activation='linear')(gap_layer) 
-        #else:
-         #   pass #TODO: implement for event detection task
+        
+        print(self.loss)
+
+        if self.loss == 'bce':
+            output_layer = tf.keras.layers.Dense(self.output_shape, activation='sigmoid')(gap_layer)
+        elif self.loss == 'mse':
+            output_layer = tf.keras.layers.Dense(self.output_shape, activation='linear')(gap_layer)
+        elif self.loss == 'angle-reg':
+            output_layer = tf.keras.layers.Dense(self.output_shape, activation='linear')(gap_layer) 
+        else:
+            raise ValueError("Choose valid loss function")
 
         model = tf.keras.models.Model(inputs=input_layer, outputs=output_layer)
         return model

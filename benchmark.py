@@ -72,11 +72,11 @@ def try_models(trainX, trainY, ids, models, N=5, scoring=None, scale=False, save
             if config['save_models']:
                 trainer.save(path)
 
-            pred = trainer.predict(X_test)
-            print(y_test.shape)
-            print(pred.shape)
-            score = scoring(y_test, pred)
-            print(score)
+            #pred = trainer.predict(X_test)
+            #print(y_test.shape)
+            #print(pred.shape)
+            score = scoring(y_test, trainer.predict(X_test))
+            #print(score)
 
             runtime = (time.time() - start_time)
             all_runs.append([name, score, runtime])

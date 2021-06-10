@@ -2,7 +2,7 @@ import tensorflow as tf
 from config import config
 from utils.utils import *
 import logging
-from tf_models.ConvNet import ConvNet
+from DL_Models.tf_models.ConvNet import ConvNet
 
 
 class XCEPTION(ConvNet):
@@ -11,9 +11,9 @@ class XCEPTION(ConvNet):
     as separable convolutions and can achieve better accuracy then the Inception architecture. It is made of modules in a specific depth.
     Each module, in our implementation, consists of a separable convolution followed by batch normalization and a ReLu activation layer.
     """
-    def __init__(self, input_shape, kernel_size=40, nb_filters=128, verbose=True, epochs=1, batch_size=64, 
-                        use_residual=True, depth=6, model_number=0):
-        super(XCEPTION, self).__init__(input_shape, kernel_size=kernel_size, nb_filters=nb_filters,
+    def __init__(self, loss, model_number, batch_size, input_shape, output_shape, kernel_size=40, nb_filters=128, verbose=True, epochs=1,
+                        use_residual=True, depth=6):
+        super(XCEPTION, self).__init__(input_shape=input_shape, output_shape=output_shape, loss=loss, kernel_size=kernel_size, nb_filters=nb_filters,
                         verbose=verbose, epochs=epochs, batch_size=batch_size, use_residual=use_residual, depth=depth,
                         model_number=model_number, preprocessing=False)
 
