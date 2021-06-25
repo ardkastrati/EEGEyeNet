@@ -62,7 +62,6 @@ class BaseNet:
     def save(self, path):
         self.model.save(path)
 
-
     def fit(self, X_train, y_train, X_val, y_val):
         #csv_logger = CSVLogger(config['batches_log'], append=True, separator=';')
         #ckpt_dir = config['model_dir'] + '/best_models/' + config['model'] + '_nb_{}_'.format(self.model_number) + 'best_model.h5'
@@ -70,7 +69,6 @@ class BaseNet:
         early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20)
         hist = self.model.fit(X_train, y_train, verbose=2, batch_size=self.batch_size, validation_data=(X_val, y_val),
                                   epochs=self.epochs, callbacks=[early_stop])
-
 
     def predict(self, testX):
         return self.model.predict(testX)

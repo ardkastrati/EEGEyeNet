@@ -11,4 +11,4 @@ def angle_loss(a, b):
     Angles pi/2 and -pi/2 should lead to a large loss, since this is a difference by pi on the unit circle
     Therefore we compute the absolute error of the "shorter" direction on the unit circle
     """
-    return tf.reduce_mean(tf.abs(tf.atan2(tf.sin(a - b), tf.cos(a - b))))
+    return tf.reduce_mean(tf.math.square(tf.abs(tf.atan2(tf.sin(a - b), tf.cos(a - b)))))

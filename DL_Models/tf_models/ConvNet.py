@@ -58,14 +58,12 @@ class ConvNet(ABC, BaseNet):
                 input_res = x
 
         gap_layer = tf.keras.layers.GlobalAveragePooling1D()(x)
-        
-        print(self.loss)
 
         if self.loss == 'bce':
             output_layer = tf.keras.layers.Dense(self.output_shape, activation='sigmoid')(gap_layer)
         elif self.loss == 'mse':
             output_layer = tf.keras.layers.Dense(self.output_shape, activation='linear')(gap_layer)
-        elif self.loss == 'angle-reg':
+        elif self.loss == 'angle-loss':
             output_layer = tf.keras.layers.Dense(self.output_shape, activation='linear')(gap_layer) 
         else:
             raise ValueError("Choose valid loss function")
