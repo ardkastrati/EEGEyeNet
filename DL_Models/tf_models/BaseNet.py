@@ -3,7 +3,7 @@ import tensorflow.keras as keras
 from keras.callbacks import CSVLogger
 import numpy as np
 import logging
-
+from config import config 
 
 class prediction_history(tf.keras.callbacks.Callback):
     """
@@ -33,12 +33,12 @@ class BaseNet:
 
         # Compile the model depending on the task 
         if self.loss == 'bce':
-            self.model.compile(loss='binary_crossentropy', optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
+            self.model.compile(loss='binary_crossentropy', optimizer=keras.optimizers.Adam(learning_rate=config['learning_rate']), metrics=['accuracy'])
         elif self.loss == 'mse':
-            self.model.compile(loss='mean_squared_error', optimizer=keras.optimizers.Adam(), metrics=['mean_squared_error'])
-        elif self.loss == 'angle_loss':
+            self.model.compile(loss='mean_squared_error', optimizer=keras.optimizers.Adam(learning_rate=config['learning_rate']), metrics=['mean_squared_error'])
+        elif self.loss == 'angle-loss':
             from DL_Models.tf_models.utils.losses import angle_loss
-            self.model.compile(loss=angle_loss, optimizer=keras.optimizers.Adam())
+            self.model.compile(loss=angle_loss, optimizer=keras.optimizers.Adam(learning_rate=config['learning_rate']))
         else:
             raise ValueError("Choose valid loss for your task")
             

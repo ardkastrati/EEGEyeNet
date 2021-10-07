@@ -28,6 +28,7 @@ def main():
     create_folder()
     logging.basicConfig(filename=config['info_log'], level=logging.INFO)
     logging.info('Started the Logging')
+    logging.info(f"Using {config['framework']}")
     start_time = time.time()
 
     # For being able to see progress that some methods use verbose (for debugging purposes)

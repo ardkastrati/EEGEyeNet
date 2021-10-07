@@ -7,3 +7,4 @@ data/*
 run.sh
 log/*
 tables/*
+.vscode/*
