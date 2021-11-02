@@ -90,4 +90,4 @@ class Ensemble_tf:
             if not self.load_file_pattern.match(file):
                 continue
             logging.info(f"Loading model nb from file {file} and predict with it")
-            self.models.append(keras.models.load_model(file))
+            self.models.append(keras.models.load_model(path+file))
